@@ -7,7 +7,6 @@ client.connect((HOST, PORT))
 
 username = ""
 
-
 def receive():
     buffer = ""
 
@@ -16,13 +15,12 @@ def receive():
             data = client.recv(1024).decode()
 
             if not data:
+                print("Server disconnected.")
                 break
 
             buffer += data
-
             while "\n" in buffer:
                 line, buffer = buffer.split("\n", 1)
-
                 msg = line.strip()
 
                 if not msg:
@@ -33,10 +31,9 @@ def receive():
                     print(content)
 
                 elif msg.startswith("ERROR"):
-                    print(f"[ERROR] {msg[6:]}")
+                    print(msg[6:])
 
         except:
-            print("[Disconnected]")
             break
 
 
@@ -52,64 +49,59 @@ def authenticate():
         if choice == "r":
             username = input("Username: ")
             password = input("Password: ")
-
-            client.send(
-                f"REGISTER {username} {password}\n".encode()
-            )
+            client.send(f"REGISTER {username} {password}\n".encode())
 
         elif choice == "l":
             username = input("Username: ")
             password = input("Password: ")
-
-            client.send(
-                f"LOGIN {username} {password}\n".encode()
-            )
+            client.send(f"LOGIN {username} {password}\n".encode())
 
         else:
-            print("[ERROR] Invalid option")
+            print("Invalid option. Please try again.")
             continue
 
         buffer = ""
-
         while True:
             data = client.recv(1024).decode()
 
             if not data:
-                print("[Disconnected]")
+                print("Server not available.")
                 return
 
             buffer += data
-
             if "\n" in buffer:
                 response, _ = buffer.split("\n", 1)
                 break
 
         if response == "AUTH_SUCCESS":
             print("\n--- Chat ---\n")
-
-            threading.Thread(target=receive, daemon=True ).start()
-
+            threading.Thread(target=receive, daemon=True).start()
             return
-
         else:
-            print(f"[ERROR] {response[6:]}")
+            print(response[6:])
 
 
 def chat():
+    exit_commands = ["q", "quit", "exit"]
     while True:
         try:
             msg = input()
 
             if not msg.strip():
                 continue
-
+                
+            if msg.lower() in exit_commands:
+                client.send("EXIT\n".encode())
+                print("\nDisconnecting...")
+                client.close()
+                break
+                
             client.send(f"SEND {msg}\n".encode())
 
         except KeyboardInterrupt:
             print("\nExiting...")
             client.close()
             break
-
 
 authenticate()
 chat()

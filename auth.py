@@ -15,7 +15,7 @@ def login(users, username, password):
     user = users.get(username)
 
     if not user:
-        return False, f"User {username} not found."
+        return False, f"User not found."
 
     if bcrypt.checkpw(password.encode(), user.password_hash.encode()):
         return True, user
