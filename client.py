@@ -1,6 +1,6 @@
 import socket
 import threading
-from config import HOST, PORT
+from config.settings import HOST, PORT
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((HOST, PORT))
@@ -35,7 +35,6 @@ def receive():
 
         except:
             break
-
 
 def authenticate():
     global username
@@ -79,7 +78,6 @@ def authenticate():
             return
         else:
             print(response[6:])
-
 
 def chat():
     exit_commands = ["q", "quit", "exit"]

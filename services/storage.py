@@ -1,11 +1,11 @@
 import json
 
 from psutil import users
-from user import User
+from models.user import User
 
 def load_users():
     try:
-        with open("users.json", "r") as f:
+        with open("data/users.json", "r") as f:
             data = json.load(f)
             users = {}
 
@@ -16,12 +16,11 @@ def load_users():
     except:
         return {}
 
-
 def save_users(users):
     data = {}
 
     for username, user in users.items():
         data[username] = user.password_hash
 
-    with open("users.json", "w") as f:
+    with open("data/users.json", "w") as f:
         json.dump(data, f, indent=4)

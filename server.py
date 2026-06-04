@@ -1,10 +1,10 @@
 import socket
 import threading
 from datetime import datetime
-from config import HOST, PORT
-from auth import register, login
-from storage import load_users, save_users
-from colors import *
+from config.settings import HOST, PORT
+from services.auth import register, login
+from services.storage import load_users, save_users
+from utils.colors import *
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
@@ -61,7 +61,6 @@ def handle_login(client, username, password):
     
     return True, res.username
 
-
 def handle_send(client, username, authenticated, line):
     if not authenticated:
         print(f"{RED}{now()} [UNAUTH SEND]{RESET}")
@@ -72,7 +71,6 @@ def handle_send(client, username, authenticated, line):
     full_msg = f"MESSAGE {username}: {text}"
     print(f"{now()} [MSG] {username}: {text}")
     broadcast(full_msg, sender=client)
-
 
 def handle_client(client, addr):
     authenticated = False

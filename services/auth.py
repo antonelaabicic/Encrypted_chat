@@ -1,5 +1,5 @@
 import bcrypt
-from user import User
+from models.user import User
 
 def register(users, username, password):
     if username in users:
@@ -9,7 +9,6 @@ def register(users, username, password):
     users[username] = User(username, password_hash)
 
     return True, f"{username} has registered."
-
 
 def login(users, username, password):
     user = users.get(username)
