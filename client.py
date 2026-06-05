@@ -7,6 +7,14 @@ client.connect((HOST, PORT))
 
 username = ""
 
+def message_output(msg, cmd):
+    print(msg[len(cmd):])
+    
+def get_credentials():
+    username = input("Username: ")
+    password = input("Password: ")
+    return username, password
+
 def receive():
     buffer = ""
 
@@ -27,11 +35,14 @@ def receive():
                     continue
 
                 if msg.startswith("MESSAGE"):
-                    content = msg[len("MESSAGE "):]
-                    print(content)
+                    message_output(msg, "MESSAGE ")
 
                 elif msg.startswith("ERROR"):
-                    print(msg[6:])
+                    message_output(msg, "ERROR ")
+
+                elif msg.startswith("EXIT"):
+                    print()
+                    message_output(msg, "EXIT ")
 
         except:
             break
@@ -46,13 +57,11 @@ def authenticate():
         choice = input("> ").lower()
 
         if choice == "r":
-            username = input("Username: ")
-            password = input("Password: ")
+            username, password = get_credentials()
             client.send(f"REGISTER {username} {password}\n".encode())
 
         elif choice == "l":
-            username = input("Username: ")
-            password = input("Password: ")
+            username, password = get_credentials()
             client.send(f"LOGIN {username} {password}\n".encode())
 
         else:

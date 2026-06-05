@@ -116,7 +116,7 @@ def handle_client(client, addr):
                     
                 elif command == "EXIT":
                     print(f"{GRAY}{now()} [DISCONNECT] {username} has left the conversation.{RESET}")
-                    broadcast(f"MESSAGE {username} has disconnected.", sender=client)
+                    broadcast(f"EXIT {username} has disconnected.", sender=client)
                     break
 
                 else:
